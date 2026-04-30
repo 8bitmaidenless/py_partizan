@@ -1,0 +1,13 @@
+---------------------- Key Generation ----------------------
+12:24:32  [OK]    generate_key(alice@example.com)
+12:24:32  [INFO]  FP: A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6A1B2
+12:24:32  [OK]    generate_key(bob@example.com)
+12:24:32  [INFO]  FP: 0011223344556677889900112233445566778899
+------------------------ Encryption ------------------------
+12:24:32  [OK]    encrypt_to_recipients([bob@example.com])
+12:24:32  [ERR]    encrypt_to_recipients([unknown@example.com])
+12:24:32  [INFO]  No public key found for recipient.
+---------------------- Miscellaneous ----------------------
+12:24:32  [WARN]  Symmetric passphrase was empty.
+12:24:32  [ERR]    GPG binary not found at /usr/bin/gpg2
+12:24:32  [INFO]  Keyring path: /home/user/.gnupg

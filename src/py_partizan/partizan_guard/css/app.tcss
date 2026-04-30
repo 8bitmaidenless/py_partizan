@@ -1,0 +1,29 @@
+Screen {
+    background: $background;
+}
+
+Header {
+    background: $primary;
+    color: $text;
+    height: 1;
+    dock: top;
+}
+
+Footer {
+    background: $primary-darken-2;
+    color: $text-muted;
+    height: 1;
+    dock: bottom;
+}
+
+#welcome-label {
+    padding: 1 4;
+    color: $text;
+    content-align: left top;
+}
+
+#placeholder-label {
+    padding: 2 4;
+    color: $text-muted;
+    content-align: left top;
+}
