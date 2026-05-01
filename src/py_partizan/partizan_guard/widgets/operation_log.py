@@ -33,7 +33,7 @@ def _normalize_level(level: str) -> str:
     return _LEVEL_ALIASES.get(level.lower(), _LEVEL_ALIASES.get(level, "INFO"))
 
 
-class OperationLog(RichLog):
+class OperationLogWidget(RichLog):
     DEFAULT_CSS = ""
     COMPONENT_CLASSES = {"operation-log"}
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     class _DemoApp(App):
 
-        TITLE = "OperationLog - demo"
+        TITLE = "OperationLogWidget - demo"
         BINDINGS = [
             Binding("s", "save_log", "Save log"),
             Binding("c", "clear_log", "Clear"),
@@ -134,11 +134,11 @@ if __name__ == "__main__":
                 id="demo-hint",
                 markup=True
             )
-            yield OperationLog(id="op-log")
+            yield OperationLogWidget(id="op-log")
             yield Footer()
 
         def on_mount(self) -> None:
-            log = self.query_one("#op-log", OperationLog)
+            log = self.query_one("#op-log", OperationLogWidget)
             log.clear()
 
             log.log_separator("Key Generation")
@@ -170,11 +170,11 @@ if __name__ == "__main__":
             log.log("Keyring path: /home/user/.gnupg", level="INFO")
         
         def action_save_log(self) -> None:
-            log = self.query_one("#op-log", OperationLog)
+            log = self.query_one("#op-log", OperationLogWidget)
             log.save()
 
         def action_clear_log(self) -> None:
-            log = self.query_one("#op-log", OperationLog)
+            log = self.query_one("#op-log", OperationLogWidget)
             log.clear()
             log.log("Log cleared.", level="INFO")
 
