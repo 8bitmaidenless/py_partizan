@@ -1,0 +1,220 @@
+#km-body {
+    height: 1fr;
+    width: 100%;
+}
+
+#km-top {
+    height: 1fr;
+    width: 100%;
+}
+
+#km-key-list {
+    width: 55%;
+}
+
+#km-key-detail {
+    width: 45%;
+}
+
+#km-op-log {
+    height: 10;
+    border-top: tall $primary-darken-2;
+    background: $background;
+}
+
+#gkm-outer {
+    align: center middle;
+    width: 100%;
+    height: 100%;
+}
+
+#gkm-inner {
+    width: 56;
+    height: auto;
+    background: $surface;
+    border: tall $primary;
+    padding: 1 2;
+}
+
+#gkm-title {
+    text-style: bold;
+    color: $text;
+    margin-bottom: 0;
+}
+
+#gkm-divider {
+    color: $primary;
+    margin-bottom: 1;
+}
+
+.gkm-label {
+    color: $text-muted;
+    margin-top: 1;
+    margin-bottom: 0;
+}
+
+#gkm-name,
+#gkm-email,
+#gkm-passphrase {
+    width: 100%;
+    border: tall $primary-darken-1;
+    margin-bottom: 0;
+}
+
+#gkm-name:focus,
+#gkm-email:focus,
+#gkm-passphrase:focus {
+    border: tall $primary;
+}
+
+#gkm-algo,
+#gkm-expire {
+    width: 100%;
+    border: tall $primary-darken-1;
+    margin-bottom: 0;
+}
+
+#gkm-hint {
+    color: $text-muted;
+    text-style: italic;
+    margin-top: 1;
+    margin-bottom: 1;
+}
+
+#gkm-buttons {
+    layout: horizontal;
+    height: auto;
+    align: right middle;
+    width: 100%;
+    margin-top: 1;
+}
+
+#gkm-buttons Button {
+    margin-left: 1;
+    min-width: 12;
+}
+
+#ikm-outer {
+    align: center middle;
+    width: 100%;
+    height: 100%;
+}
+
+#ikm-inner {
+    width: 64;
+    height: auto;
+    max-height: 90%;
+    background: $surface;
+    border: tall $primary;
+    padding: 1 2;
+}
+
+#ikm-title {
+    text-style: bold;
+    color: $text;
+    margin-bottom: 0;
+}
+
+#ikm-divider {
+    color: $primary;
+    margin-bottom: 1;
+}
+
+.ikm-label {
+    color: $text-muted;
+    margin-top: 1;
+    margin-bottom: 0;
+}
+
+#ikm-mode {
+    height: auto;
+    margin-bottom: 1;
+}
+
+#ikm-armor-text {
+    height: 10;
+    border: tall $primary-darken-1;
+    width: 100%;
+}
+
+#ikm-armor-text:focus {
+    border: tall $primary;
+}
+
+#ikm-file-path {
+    width: 100%;
+    border: tall $primary-darken-1;
+}
+
+#ikm-file-path:focus {
+    border: tall $primary;
+}
+
+#ikm-validation-msg {
+    color: yellow;
+    height: auto;
+    margin-top: 1;
+}
+
+#ikm-buttons {
+    layout: horizontal;
+    height: auto;
+    align: right middle;
+    width: 100%;
+    margin-top: 1;
+}
+
+#ikm-buttons Button {
+    margin-left: 1;
+    min-width: 10;
+}
+
+#tm-outer {
+    align: center middle;
+    width: 100%;
+    height: 100%;
+}
+
+#tm-inner {
+    width: 56;
+    height: auto;
+    background: $surface;
+    border: tall $primary;
+    padding: 1 2;
+}
+
+#tm-title {
+    text-style: bold;
+    color: $text;
+    margin-bottom: 0;
+}
+
+#tm-divider {
+    color: $primary;
+    margin-bottom: 1;
+}
+
+#tm-description {
+    color: $text-muted;
+    text-style: italic;
+    margin-bottom: 1;
+}
+
+#tm-trust-set {
+    height: auto;
+    border: none;
+    margin-bottom: 1;
+}
+
+#tm-buttons {
+    layout: horizontal;
+    height: auto;
+    align: right middle;
+    width: 100%;
+    margin-top: 1;
+}
+
+#tm-buttons Button {
+    margin-left: 1;
+    min-width: 12;
+}

@@ -1,0 +1,71 @@
+KeyDetailWidget {
+    height: 1fr;
+    border: tall $primary-darken-1;
+    padding: 0 1;
+    scrollbar-color: $primary;
+    scrollbar-color-hover: $primary-lighten-1;
+    background: $surface;
+}
+
+KeyDetailWidget:focus {
+    border: tall $primary;
+}
+
+#kd-placeholder {
+    color: $text-muted;
+    padding: 2 2;
+    text-style: italic;
+}
+
+.kd-section-label {
+    color: $primary;
+    text-style: bold;
+}
+
+.kd-field {
+    color: $text;
+}
+
+.kd-uid {
+    color: $text-muted;
+    padding-left: 2;
+}
+
+#kd-fingerprint {
+    color: $text;
+    text-style: bold;
+    padding: 0 0 0 0;
+}
+
+#kd-subkey-table {
+    height: auto;
+    max-height: 10;
+    margin: 0 2;
+    background: $background;
+    border: tall $primary-darken-2;
+}
+
+#kd-subkey-table > .datatable--header {
+    background: $primary-darken-2;
+    color: $text-muted;
+    text-style: bold;
+}
+
+#kd-subkey-table > .datatable--even-row {
+    background: $surface;
+}
+
+#kd-subkey-table > .datatable--odd-row {
+    background: $background;
+}
+
+.kd-empty {
+    color: $text-muted;
+    padding-left: 2;
+}
+
+#kd-hint {
+    color: $text-muted;
+    text-style: italic;
+    margin-top: 1;
+}
