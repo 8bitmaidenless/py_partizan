@@ -12,6 +12,7 @@ textual = "^8.2.4"
 python-dotenv = "^1.2.2"
 python-gnupg = "^0.5.6"
 pgpy = "^0.6.0"
+pyperclip = "^1.11.0"
 
 
 [tool.poetry.group.dev.dependencies]
