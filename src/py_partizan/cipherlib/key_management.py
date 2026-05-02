@@ -56,7 +56,22 @@ def generate_key(
 ) -> str | None:
     """
     Generate a new GPG key pair and return the fingerprint on success.
-    
+
+    Parameters
+    ----------
+    gpg          : `gnupg.GPG` instance
+    name         : Real name for the UID
+    email        : Email address for the UID
+    comment      : Optional UID comment
+    expire       : Expiry string - "0" = no expiry, "1y" = 1 year, etc.
+    algorithm    : "rsa" (4096-bit) or "ecc" (Ed25519/Cv25519)
+    passphrase   : If provided, the secret key is protected with this
+                   passphrase, otherwise the key has no protection.
+
+    Returns
+    -------
+    str | None
+        The key fingerprint, or `None` on failure.
     """
     template = RSA_KEY_PARAMS if algorithm.lower() == "rsa" else ECC_KEY_PARAMS
 
@@ -82,6 +97,12 @@ def generate_key(
 
 
 def list_keys_verbose(gpg, *, secret: bool = False) -> list[dict]:
+    """
+    Return a list of key dicts from the keyring and print a summary table.
+    
+    Each dict in the returned list contains all fields `python-gnupg` exposes:
+    keyid, fingerprint, uids, expires, length, type, trust, subkeys, ...
+    """
     keys = gpg.list_keys(secret)
     kind = "secret" if secret else "public"
 
@@ -103,6 +124,11 @@ def list_keys_verbose(gpg, *, secret: bool = False) -> list[dict]:
 
 
 def find_key(gpg, identifier: str, *, secret: bool = False) -> dict | None:
+    """
+    Return the first key whose fingerprint or any UID contains `identifier`.
+    
+    Useful for resolving a name/email/fingerprint to a full key dict.
+    """
     keys = gpg.list_keys(secret)
     ident_lower = identifier.lower()
 
@@ -123,6 +149,19 @@ def export_public_key(
     armor: bool = True,
     output_path: Path | None = None
 ) -> str | bytes:
+    """
+    Export a public key by fingerprint.
+    
+    Parameters
+    ----------
+    armor       : If `True`, output is ASCII-armored (PEM-like).
+                  If `False`, output is raw binary (DER-like).
+    output_path : If provided, write the exported data to this file.
+    
+    Returns
+    -------
+    `str` (armored) or `bytes` (binary) key data.
+    """
     data = gpg.export_keys(fingerprint, armor=armor)
 
     if not data:
@@ -147,6 +186,18 @@ def export_secret_key(
     passphrase: str | None = None,
     output_path: Path | None = None
 ) -> str | bytes:
+    """
+    Export a secret key by fingerprint.
+    
+    WARNING: Handle secret key material with care. Do not log or print
+    the returned data in production mode.
+    
+    Parameters
+    ----------
+    passphrase  : Required if the secret key is passphrase-protected.
+    armor       : ASCII-armor the output.
+    output_path : Write to file if provided.
+    """
     data = gpg.export_keys(
         fingerprint,
         secret=True,
@@ -173,18 +224,26 @@ def import_key_data(
     *,
     label: str = "import",
 ) -> list[str]:
+    """
+    Import one or more keys from a string or bytes blob.
+    
+    Returns a list of imported fingerprints.  An empty list means the import
+    failed or the keys were already present (`python-gnupg` reports 0 imports
+    for duplicates).
+    """
     result = gpg.import_keys(key_data)
     check_result(result, label=label)
 
     fps = result.fingerprints
-    print(f"imported : {len(fps)} key(s)")
+    print(f"       imported :    {len(fps)} key(s)")
     for fp in fps:
-        print(f"\t{fp}")
+        print(f"                     {fp}")
 
     return fps
 
 
 def import_key_file(gpg, path: Path | str, *, label: str | None = None) -> list[str]:
+    """Import keys from a file on disk."""
     p = Path(path)
     label = label or f"import_key_file({p.name})"
     key_data = p.read_text() if p.suffix in (".asc", ".txt") else p.read_bytes()
@@ -198,6 +257,18 @@ def delete_key(
     secret: bool = False,
     passphrase: str | None = None
 ) -> bool:
+    """
+    Delete a key from the keyring.
+    
+    GPG requires the secret key to be deleted before the public key can be
+    removed. Pass `secret=True` to delete the secret portion first, then call
+    again with `secret=False` to remove the public key.
+    
+    Parameters
+    ----------
+    secret       : Delete the secret (private) key.
+    passphrase   : Required if the secret key is protected.
+    """
     kind = "secret" if secret else "public"
     result = gpg.delete_keys(fingerprint, secret=secret, passphrase=passphrase)
     return check_result(result, label=f"delete_key({kind}, {fingerprint[:16]}...)")

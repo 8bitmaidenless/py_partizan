@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_partizan"
-version = "0.1.0"
+version = "0.1.3"
 description = "A package for doing great things!"
 authors = ["Dylan Garrett"]
 license = "MIT"
@@ -23,3 +23,6 @@ textual-dev = "^1.8.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+partizan-gpg = "py_partizan.partizan_guard.app:main"

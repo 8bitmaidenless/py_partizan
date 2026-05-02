@@ -107,24 +107,25 @@ def check_result(result, *, label: str = "operation") -> bool:
         print(f"[ERR] {label}")
 
     if fingerprint:
-        print(f"fingerprint : {fingerprint}")
+        print(f"\t\tfingerprint : {fingerprint}")
     if fingerprints:
-        print(f"fingerprints : {fingerprints}")
+        print(f"\t\tfingerprints : {fingerprints}")
     if status:
-        print(f"status : {status}")
+        print(f"\t\t      status : {status}")
     if stderr:
         lines = [ln for ln in stderr.strip().splitlines() if ln]
         tail = lines[-5:] if len(lines) > 5 else lines
         for ln in tail:
-            print(f"stderr : {ln}")
+            print(f"\t\t      stderr : {ln}")
 
     return success
 
 
 def inspect_gpg_version(gpg: gnupg.GPG) -> None:
+    """Print the gpg binary version string."""
     version = gpg.version
     print(f"gpg binary version : {version}")
-    print(f"GNUPGHOME : {gpg.gnupghome}")
+    print(f"GNUPGHOME          : {gpg.gnupghome}")
 
 
 if __name__ == "__main__":

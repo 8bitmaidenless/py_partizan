@@ -148,7 +148,12 @@ class GPGApp(App):
         is replaced rather than stacked (no Escape-to-go-back required for
         top-level navigation).
         """
-        self.switch_screen(screen_name)
+        if self.screen.__class__.__name__ in (
+            "KeyManagementScreen",
+            "EncryptDecryptScreen"
+        ):
+            return
+        self.push_screen(screen_name)
 
 
 WELCOME_TEXT = """\

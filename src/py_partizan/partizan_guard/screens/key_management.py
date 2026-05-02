@@ -157,7 +157,7 @@ class KeyManagementScreen(Screen):
             self.gpg,
             result.name,
             result.email,
-            comment="",
+            comment="Generated via Partizan Guard GPG",
             expire=result.expire,
             algorithm=result.algorithm,
             passphrase=result.passphrase
@@ -397,7 +397,8 @@ class KeyManagementScreen(Screen):
             self._key_list.focus()
 
     def action_go_home(self) -> None:
-        self.app.switch_screen("home") if "home" in self.app._installed_screens else self.app.pop_screen()
+        # self.app.switch_screen("home") if "home" in self.app._installed_screens else self.app.pop_screen()
+        self.app.pop_screen()
 
     @property
     def _log(self) -> OperationLogWidget:

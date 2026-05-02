@@ -160,7 +160,7 @@ class EncryptDecryptScreen(Screen):
 
                 yield Label("Input", classes="ed-section-label")
                 with Horizontal(id="ed-input-toggle"):
-                    yield Button("Text", id="ed-btn-txt", variant="primary")
+                    yield Button("Text", id="ed-btn-text", variant="primary")
                     yield Button("File path", id="ed-btn-file", variant="default")
 
                 yield TextArea(
@@ -749,11 +749,12 @@ class EncryptDecryptScreen(Screen):
                 self.query_one("#ed-input-file", Input).focus()
     
     def action_go_home(self) -> None:
-        installed = getattr(self.app, "_installed_screens", {})
-        if "home" in installed:
-            self.app.switch_screen("home")
-        else:
-            self.app.pop_screen()
+        self.app.pop_screen()
+        # installed = getattr(self.app, "_installed_screens", {})
+        # if "home" in installed:
+        #     self.app.switch_screen("home")
+        # else:
+        #     self.app.pop_screen()
         
     @property
     def _log(self) -> OperationLogWidget:

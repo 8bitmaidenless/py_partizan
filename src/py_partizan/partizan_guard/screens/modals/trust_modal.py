@@ -68,7 +68,7 @@ class TrustModal(ModalScreen[TrustResult]):
                     yield Button("Cancel", variant="default", id="tm-cancel")
 
     def on_mount(self) -> None:
-        self.query_one("#fm-trust-set", RadioSet).focus()
+        self.query_one("#tm-trust-set", RadioSet).focus()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "tm-ok":

@@ -183,10 +183,12 @@ class KeyListWidget(DataTable):
     
     def get_cursor_key(self) -> KeyInfo | None:
         """Return the KeyInfo for the row currently under the cursor, or None."""
-        try:
-            row_key = self.get_row_at(self.cursor_row)
-        except Exception:
-            return None
+        return self._info_at_cursor()
+        # try:
+        #     row_key = self.get_row_at(self.cursor_row)
+
+        # except Exception:
+        #     return None
         
     def clear_selection(self) -> None:
         """Programmatically clear the multi-select set and redraw."""
@@ -376,8 +378,8 @@ def _format_expiry(expires: str) -> str:
     try:
         import datetime
         ts = int(expires)
-        # return datetime.datetime.utcfromtimestamp(datetime.timezone.utc)
-        return datetime.datetime.fromtimstamp(ts, datetime.timezone.utc).strftime("%Y-%m-%d")
+        return datetime.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d")
+        # return datetime.datetime.fromtimstamp(ts, datetime.timezone.utc).strftime("%Y-%m-%d")
     except (ValueError, OSError):
         return expires
     

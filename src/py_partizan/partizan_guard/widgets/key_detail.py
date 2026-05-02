@@ -64,7 +64,8 @@ class KeyDetailWidget(ScrollableContainer):
         self._gpg: None
 
     def compose(self) -> ComposeResult:
-        yield Static(_PLACEHOLDER, id="kd-placeholder")
+        # yield Static(_PLACEHOLDER, id="kd-placeholder")
+        yield Static(_PLACEHOLDER, classes="kd-placeholder")
         
     def show(self, key_info: KeyInfo, gpg) -> None:
         """
@@ -91,8 +92,9 @@ class KeyDetailWidget(ScrollableContainer):
     def clear(self) -> None:
         """Return the widget to it's empty placeholder state."""
         self._current_info = None
-        self._replace_content([Static(_PLACEHOLDER, id="kd-placeholder")])
-
+        # self._replace_content([Static(_PLACEHOLDER, id="kd-placeholder")])
+        self._replace_content([Static(_PLACEHOLDER, classes="kd-placeholder")])
+        
     def action_copy_fingerprint(self) -> None:
         """
         Copy the full fingerprint of the currently displayed key to the
@@ -176,12 +178,15 @@ class KeyDetailWidget(ScrollableContainer):
         nodes.append(self._section_label("FINGERPRINT"))
         nodes.append(Static(
             _format_fingerprint(info.fingerprint),
-            id="kd-fingerprint"
+            # id="kd-fingerprint"
+            classes="kd-fingerprint"
         ))
 
         nodes.append(self._section_label(f"USER IDs  ({len(info.uids)})"))
-        for i, uid in enumerate(info.uids):
-            nodes.append(Static(f"[{i+1}]  {uid}", id=f"kd-uid-{i+1}", classes="kd-uid"))
+        # for i, uid in enumerate(info.uids):
+        for uid in info.uids:
+            # nodes.append(Static(f"[{i+1}]  {uid}", id=f"kd-uid-{i+1}", classes="kd-uid"))
+            nodes.append(Static(f"  {uid}", classes="kd-uid"))
 
         nodes.append(self._section_label(f"SUBKEYS  ({len(subkeys)})"))
         if subkeys:
@@ -191,22 +196,33 @@ class KeyDetailWidget(ScrollableContainer):
 
         nodes.append(Static(
             "\n  [b]C[/b] - copy fingerprint    [b]X[/b] - export public key (.asc)",
-            id="kd-hint",
+            # id="kd-hint",
+            classes="kd-hint",
             markup=True
         ))
 
         self._replace_content(nodes)
 
     def _replace_content(self, nodes: list) -> None:
+        # """
+        # Remove all current children and mount the new node list.
+        # Uses `remove_children()` + `mount()` which is the correct Textual
+        # pattern for dynamic content replacement inside a container.
+        # """
         """
-        Remove all current children and mount the new node list.
-        Uses `remove_children()` + `mount()` which is the correct Textual
-        pattern for dynamic content replacement inside a container.
         """
+        self._pending_nodes = nodes
         self.remove_children()
-        self.mount(*nodes)
+        # self.mount(*nodes)
+        self.call_after_refresh(self._mount_pending)
+        # self.scroll_home(animate=False)
 
-        self.scroll_home(animate=False)
+    def _mount_pending(self) -> None:
+        nodes = getattr(self, "_pending_nodes", [])
+        if nodes:
+            self.mount(*nodes)
+            self.scroll_home(animate=False)
+            self._pending_nodes = []
 
     def _section_label(self, text: str) -> Static:
         """A styled section heading."""
@@ -236,7 +252,8 @@ class KeyDetailWidget(ScrollableContainer):
         table: DataTable = DataTable(
             show_cursor=False,
             zebra_stripes=True,
-            id="kd-subkey-table"
+            # id="kd-subkey-table",
+            classes="kd-subkey-table"
         )
         table.add_column("Subkey ID", width=18)
         table.add_column("Algorithm", width=12)

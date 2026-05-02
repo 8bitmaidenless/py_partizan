@@ -1,3 +1,17 @@
+"""
+encrypt_decrypt.py
+------------------
+Encryption and decryption workflows covering the most common GnuPG use cases:
+
+    - Asymmetric encryption to one or more recipients (public-key)
+    - Symmetric encryption (passphrase only, no recipient key needed)
+    - ASCII-armor vs. binary output
+    - Encrypt-and-sign in one pass
+    - Decrypt with passphrase callback
+    - File-to-file encryption / decryption
+    - Streaming large data through the gpg binary
+"""
+
 import sys
 from pathlib import Path
 
@@ -16,6 +30,27 @@ def encrypt_to_recipients(
     always_trust: bool = True,
     extra_args: list[str] | None = None
 ) -> str | bytes | None:
+    """
+    Encrypt `plaintext` to one or more recipient key fingerprints / key IDS.
+    
+    Parameters
+    ----------
+    plaintext     : Data to encrypt (`str` or `bytes`)
+    recipients    : List of fingerprints, key IDs, or email addresses that
+                    gpg can resolve to public keys in the keyring.
+    armor         : ASCII-armor the ciphertext (default True).
+    sign          : Fingerprint of the signing key. If provided the,
+                    ciphertext will be signed in the same gpg call.
+    passphrase    : Passphrase for the signing key (if `sign` is set and the 
+                    key is passphrase-protected).
+    always_trust  : Skip the web-of-trust check. Useful in dev/test where 
+                    keys have not been explicitly trusted.
+    extra_args    : Additional raw gpg flags, e.g. [`--compress-level`, `"0"`].
+    
+    Returns
+    -------
+    `str` (armored) or `bytes` (binary) ciphertext, or `None` on failure.
+    """
     result = gpg.encrypt(
         plaintext,
         recipients,
@@ -40,6 +75,21 @@ def encrypt_symmetric(
     armor: bool = True,
     cipher_algo: str = "AES256"
 ) -> str | bytes | None:
+    """
+    Encrypt `plaintext` symmetrically using `passphrase`.
+    
+    No recipient public key is needed.  The ciphertext can be decrypted by
+    anyone who knows the passphrase.
+    
+    Parameters
+    ----------
+    cipher_algo : gpg cipher algorithm name. AES256 is the safe default.
+                  Others: CAMELLIA256, TWOFISH, AES192, AES128.
+                  
+    Returns
+    -------
+    `str` (armored) or `bytes` (binary) ciphertext, or `None` on failure.
+    """
     result = gpg.encrypt(
         plaintext,
         recipients=None,
@@ -62,6 +112,33 @@ def decrypt_data(
     passphrase: str | None = None,
     always_trust: bool = True
 ) -> bytes | None:
+    """
+    Decrypt `ciphertext` and return the plaintext bytes.
+    
+    Works for both asymmetric (private key in keyring) and symmetric
+    (passphrase-only) ciphertext - gpg detects the type automatically.
+    
+    Parameters
+    ----------
+    ciphertext   : Armored string or raw bytes ciphertext.
+    passphrase   : Passphrase for the decrypting private key or for symmetric
+                  decryption. If the key has no passphrase, pass `None`.
+    always_trust : Skip trust checks during decryption (matches encrypt call).
+    
+    Returns
+    -------
+    `bytes` plaintext, or `None` on failure.
+    
+    Notes
+    -----
+    `result.data`  -> bytes plaintext
+    `result.ok`    -> bool
+    `result.status` -> status string from gpg
+    `result.stderr` -> raw gpg stderr (useful for debugging trust issues)
+    `result.username` -> UID of the signing key (if the data was signed)
+    `result.key_id``  -> key ID used or decryption
+    `result.signature_id` -> signature ID if signed
+    """
     result = gpg.decrypt(
         ciphertext,
         passphrase=passphrase,
