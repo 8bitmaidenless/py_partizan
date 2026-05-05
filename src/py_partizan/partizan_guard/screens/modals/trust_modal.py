@@ -23,7 +23,7 @@ _TRUST_OPTIONS: list[tuple[str, str]] = [
     ("Undefined  - trust not set", "TRUST_UNDEFINED"),
     ("Never      - do not trust this key", "TRUST_NEVER"),
     ("Marginal   - partially trust this key", "TRUST_MARGINAL"),
-    ("Full       - fully trust this key", "TRUST_FULL"),
+    ("Full       - fully trust this key", "TRUST_FULLY"),
     ("Ultimate   - your own key / absolute trust", "TRUST_ULTIMATE"),
 ]
 
