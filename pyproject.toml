@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_partizan"
-version = "0.1.3"
+version = "0.1.4"
 description = "A package for doing great things!"
 authors = ["Dylan Garrett"]
 license = "MIT"
