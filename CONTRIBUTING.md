@@ -79,3 +79,16 @@ Before you submit a pull request, check that it meets these guidelines:
 
 Please note that the `py_partizan` project is released with a
 Code of Conduct. By contributing to this project you agree to abide by its terms.
+
+
+## Current Bugs
+
+### Key Mgmt Screen
+
+#### Key Deletion Bug
+Whenever user tries to delete a listed key, app crashes when the prompt is confirmed by the user giving the following error:
+```python
+ValueError: For GnuPG >= 2.1, deleting secret keys needs a passphrase to be provided
+```
+
+**Root Cause**: 

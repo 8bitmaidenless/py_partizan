@@ -21,6 +21,7 @@ from py_partizan.cipherlib import (
 from py_partizan.partizan_guard.widgets.key_detail import KeyDetailWidget
 from py_partizan.partizan_guard.widgets.key_list import KeyInfo, KeyListWidget
 from py_partizan.partizan_guard.widgets.operation_log import OperationLogWidget
+from py_partizan.partizan_guard.widgets.passphrase_modal import PassphraseModal, PassphraseResult
 from py_partizan.partizan_guard.screens.modals.generate_key_modal import GenerateKeyModal, GenerateKeyResult
 from py_partizan.partizan_guard.screens.modals.import_key_modal import ImportKeyModal, ImportKeyResult
 from py_partizan.partizan_guard.screens.modals.trust_modal import TrustModal, TrustResult
@@ -279,31 +280,63 @@ class KeyManagementScreen(Screen):
             timeout=10,
             markup=True
         )
+        # self.app.push_screen(
+        #     PassphraseModal(title="Passphrase required for secret key deleteion."),
+        #     callback=self._
+        # )
 
     def on_key(self, event) -> None:
         """Intercept Y/N after a delete confirmation notification."""
         if self._pending_delete_fp is None:
             return
         if event.key.lower() == "y":
-            fp = self._pending_delete_fp
-            self._pending_delete_fp = None
+            # fp = self._pending_delete_fp
+            # self._pending_delete_fp = None
+            # event.stop()
+            # self._log.log_separator("Delete Key")
+            # self.run_worker(
+            #     self._worker_delete(fp),
+            #     thread=True,
+            #     name="delete_key"
+            # )
             event.stop()
             self._log.log_separator("Delete Key")
-            self.run_worker(
-                self._worker_delete(fp),
-                thread=True,
-                name="delete_key"
+            self.app.push_screen(
+                PassphraseModal(title="Passphase required for secret key deletion."),
+                callback=self._on_delete_pass
             )
         else:
             self._pending_delete_fp = None
             self._log.log("Deletion cancelled.", level="INFO")
 
-    async def _worker_delete(self, fp: str) -> None:
+    def _on_delete_pass(self, result: PassphraseResult) -> None:
+        fp = self._pending_delete_fp
+        self._pending_delete_fp = None
+        if result.cancelled:
+            self._log.log(
+                "Key deletion cancelled.",
+                level="INFO"
+            )
+            return
+        if result.was_empty:
+            self._log.log(
+                "Empty passphrase - only public keys will be deleted.",
+                level="WARN"
+            )
+        self.run_worker(
+            self._worker_delete(fp, result),
+            thread=True,
+            name="delete_key"
+        )
+
+
+    async def _worker_delete(self, fp: str, result: PassphraseResult) -> None:
         ok_sec = await asyncio.to_thread(
             delete_key,
             self.gpg,
             fp,
-            secret=True
+            secret=True,
+            passphrase=result.passphrase
         )
         ok_pub = await asyncio.to_thread(
             delete_key,
